@@ -1,6 +1,10 @@
 package com.test;
 
+import com.test.classpath.Classpath;
 import org.apache.commons.cli.ParseException;
+
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 
 public class Wilsoni {
     public static void main(String[] args) throws ParseException {
@@ -17,8 +21,19 @@ public class Wilsoni {
     }
 
     public static void startJVM(Cmd cmd) {
-        System.out.println("classpath: " + cmd.getClasspath()
+        Classpath cp = new Classpath();
+        cp.parse(cmd.getxJre(), cmd.getClasspath());
+        System.out.println("classpath: " + cp
                 + ", class: " + cmd.getClassName()
                 + ", " + cmd.argsToString());
+        String className = cmd.getClassName().replace(".", "/");
+        byte[] classData = cp.readClass(className);
+        if (classData == null) {
+            System.out.println("could not find or load main class " + cmd.getClassName());
+            return;
+        }
+
+        BigInteger bigInteger = new BigInteger(1, classData);
+        System.out.println(bigInteger.toString(16).toUpperCase());
     }
 }

@@ -10,10 +10,11 @@ public class Cmd {
     private boolean version;
     // 类路径
     private String classpath;
-    // jre 路径
+    // jre 目录路径
     private String xJre;
     // 参数数组
     private String[] args;
+    // 类权限定名
     private String className;
 
     private Options options;
@@ -23,7 +24,7 @@ public class Cmd {
         options.addOption("h", "help", false, "Print this usage information");
         options.addOption("v", "verbose", false, "Print out VERBOSE information" );
         options.addOption("cp", "classpath", true, "class path");
-        options.addOption("Xjre", "Xjre", true, "jre path");
+        options.addOption("Xjre", "Xjre", true, "path to jre");
 
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd;
