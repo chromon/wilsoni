@@ -1,0 +1,20 @@
+package com.test.instructions.comparisons.dcmp;
+
+import com.test.dataarea.Frame;
+import com.test.instructions.base.NoOperandsInstruction;
+import com.test.instructions.comparisons.CmpManager;
+
+// 比较指令可以分为两类：
+// 一类将比较结果推入操作数栈顶，一类根据比较结果跳转。
+// 比较指令是编译器实现 if-else、for、while 等语句的基石
+
+// 由于浮点数计算有可能产生NaN（Not a Number）值，所以比较两个浮点数时，
+// 除了大于、等于、小于之外，还有第 4 种结果：无法比较。
+public class DCmpL extends NoOperandsInstruction {
+    // 当两个 double 变量中至少有一个是 NaN 时，用 dcmpg 指令比较的结果是 1，
+    // 而用 dcmpl 指令比较的结果是 -1。
+    @Override
+    public void Execute(Frame frame) {
+        CmpManager.dcmp(frame, false);
+    }
+}

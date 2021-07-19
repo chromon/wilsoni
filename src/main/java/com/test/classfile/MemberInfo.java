@@ -21,6 +21,7 @@ method_info {
 
 import com.test.classfile.attribute.AttributeInfo;
 import com.test.classfile.attribute.AttributeInfoManager;
+import com.test.classfile.attribute.CodeAttribute;
 
 import java.util.List;
 
@@ -54,5 +55,19 @@ public class MemberInfo {
     // 获取字段或方法描述
     public String getDescriptor() {
         return this.cp.getUtf8(this.descriptorIndex);
+    }
+
+    public int getAccessFlags() {
+        return accessFlags;
+    }
+
+    // 获取 Code 属性
+    public CodeAttribute getCodeAttribute() {
+        for (AttributeInfo attribute: attributes) {
+            if (attribute instanceof CodeAttribute) {
+                return (CodeAttribute) attribute;
+            }
+        }
+        return null;
     }
 }

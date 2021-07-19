@@ -113,4 +113,14 @@ public class OperandStack {
         }
         return false;
     }
+
+    // 向操作数栈中添加变量
+    public void pushSlot(Slot slot) {
+        this.operandStack[this.size++] = slot;
+    }
+
+    // 从操作数栈中弹出变量
+    public Slot popSlot() {
+        return this.operandStack[--this.size];
+    }
 }

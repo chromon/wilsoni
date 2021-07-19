@@ -54,7 +54,7 @@ public class CodeAttribute implements AttributeInfo {
         this.maxStack = classReader.readU2();
         this.maxLocals = classReader.readU2();
         // 字节码长度
-        int codeLength = classReader.readU4Int();
+        int codeLength = classReader.readInt();
         this.code = classReader.readBytes(codeLength);
         this.exceptionTable = readExceptionTable(classReader);
         this.attributes = new AttributeInfoManager().readAttributes(classReader, this.cp);

@@ -1,0 +1,33 @@
+package com.test.instructions.stack.dup2;
+
+import com.test.dataarea.Frame;
+import com.test.dataarea.OperandStack;
+import com.test.dataarea.Slot;
+import com.test.instructions.base.NoOperandsInstruction;
+
+/*
+bottom -> top
+[...][d][c][b][a]
+       ____/ __/
+      |   __/
+      V  V
+[...][b][a][d][c][b][a]
+*/
+// 将操作数栈前两个元素看做整体并复制，然后将这一整体插入到操作数栈第四个元素后面
+// (注：前两个元素看做整体时，可以理解为插入到第三个元素后面)
+public class Dup2X2 extends NoOperandsInstruction {
+    @Override
+    public void Execute(Frame frame) {
+        OperandStack stack = frame.getOperandStack();
+        Slot slot1 = stack.popSlot();
+        Slot slot2 = stack.popSlot();
+        Slot slot3 = stack.popSlot();
+        Slot slot4 = stack.popSlot();
+        stack.pushSlot(slot2);
+        stack.pushSlot(slot1);
+        stack.pushSlot(slot4);
+        stack.pushSlot(slot3);
+        stack.pushSlot(slot2);
+        stack.pushSlot(slot1);
+    }
+}

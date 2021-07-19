@@ -7,8 +7,12 @@ public class Frame {
     private LocalVars localVars;
     // 操作数栈指针
     private OperandStack operandStack;
+    // 线程
+    private XThread xThread;
+    private int nextPC;
 
-    public Frame(int maxLocals, int maxStack) {
+    public Frame(XThread xThread, int maxLocals, int maxStack) {
+        this.xThread = xThread;
         this.localVars = new LocalVars(maxLocals);
         this.operandStack = new OperandStack(maxStack);
     }
@@ -19,5 +23,21 @@ public class Frame {
 
     public OperandStack getOperandStack() {
         return operandStack;
+    }
+
+    public XThread getXThread() {
+        return xThread;
+    }
+
+    public void setXThread(XThread xThread) {
+        this.xThread = xThread;
+    }
+
+    public int getNextPC() {
+        return nextPC;
+    }
+
+    public void setNextPC(int nextPC) {
+        this.nextPC = nextPC;
     }
 }

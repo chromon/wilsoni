@@ -2,10 +2,12 @@ package com.test;
 
 import com.test.classfile.ClassFile;
 import com.test.classfile.ClassParse;
+import com.test.classfile.MemberInfo;
 import com.test.classpath.Classpath;
 import com.test.dataarea.Frame;
 import com.test.dataarea.LocalVars;
 import com.test.dataarea.OperandStack;
+import com.test.interpreter.Interpreter;
 import org.apache.commons.cli.ParseException;
 
 import java.util.List;
@@ -25,18 +27,34 @@ public class Wilsoni {
     }
 
     public static void startJVM(Cmd cmd) {
-//        Classpath cp = new Classpath();
-//        cp.parse(cmd.getxJre(), cmd.getClasspath());
-//        System.out.println("classpath: " + cp
-//                + ", class: " + cmd.getClassName()
-//                + ", " + cmd.argsToString());
-//        String className = cmd.getClassName().replace(".", "/");
-//        ClassFile cf = load(className, cp);
-//        printClassInfo(cf);
+        Classpath cp = new Classpath();
+        cp.parse(cmd.getxJre(), cmd.getClasspath());
+        System.out.println("classpath: " + cp
+                + ", class: " + cmd.getClassName()
+                + ", " + cmd.argsToString());
+        String className = cmd.getClassName().replace(".", "/");
+        ClassFile cf = load(className, cp);
+        MemberInfo mainMethod = getMainMethod(cf);
+        if (mainMethod != null) {
+            new Interpreter().interpret(mainMethod);
+        } else {
+            throw new RuntimeException("main method not found in class: "
+                    + cmd.getClassName());
+        }
+    }
 
-        Frame frame = new Frame(100, 100);
-        testLocalVars(frame.getLocalVars());
-        testOperandStack(frame.getOperandStack());
+    private static ClassFile load(String className, Classpath cp) {
+        byte[] classData = cp.readClass(className);
+        return ClassParse.parse(classData);
+    }
+
+    private static MemberInfo getMainMethod(ClassFile cf) {
+        for (MemberInfo m : cf.getMethods()) {
+            if (m.getName().equals("main") && m.getDescriptor().equals("([Ljava/lang/String;)V")) {
+                return m;
+            }
+        }
+        return null;
     }
 
     private static void testLocalVars(LocalVars localVars) {
@@ -71,11 +89,6 @@ public class Wilsoni {
         System.out.println(operandStack.popLong());
         System.out.println(operandStack.popInt());
         System.out.println(operandStack.popInt());
-    }
-
-    private static ClassFile load(String className, Classpath cp) {
-        byte[] classData = cp.readClass(className);
-        return ClassParse.parse(classData);
     }
 
     private static void printClassInfo(ClassFile cf) {

@@ -45,6 +45,13 @@ public class ClassReader {
         return d;
     }
 
+    // 32-bit signed int
+    public int readInt() {
+        int d = buf.getInt(offset);
+        offset += 4;
+        return d;
+    }
+
     // 读取 u4 数据类型: 32-bit unsigned int
     private int readUnsignedInt() {
         int d =  (int)(buf.getInt(offset));
