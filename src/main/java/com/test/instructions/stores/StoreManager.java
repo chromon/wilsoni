@@ -1,7 +1,7 @@
 package com.test.instructions.stores;
 
-import com.sun.jdi.Value;
 import com.test.dataarea.Frame;
+import com.test.dataarea.heap.XObject;
 
 // 存储指令工具类
 public class StoreManager {
@@ -32,7 +32,7 @@ public class StoreManager {
 
     // 把 引用 型变量从操作数栈顶弹出，然后存入局部变量表
     public static void aStore(Frame frame, int index) {
-        Object obj = frame.getOperandStack().popRef();
+        XObject obj = frame.getOperandStack().popRef();
         frame.getLocalVars().setRef(index, obj);
     }
 }

@@ -20,6 +20,9 @@ import com.test.instructions.constants.fconstx.FConst2;
 import com.test.instructions.constants.iconstx.*;
 import com.test.instructions.constants.lconstx.LConst0;
 import com.test.instructions.constants.lconstx.LConst1;
+import com.test.instructions.constants.ldc.LDC;
+import com.test.instructions.constants.ldc.LDC2W;
+import com.test.instructions.constants.ldc.LDCW;
 import com.test.instructions.constants.push.BiPush;
 import com.test.instructions.constants.push.SiPush;
 import com.test.instructions.control.GOTO;
@@ -76,6 +79,7 @@ import com.test.instructions.math.sub.DSub;
 import com.test.instructions.math.sub.FSub;
 import com.test.instructions.math.sub.ISub;
 import com.test.instructions.math.sub.LSub;
+import com.test.instructions.references.*;
 import com.test.instructions.stack.Swap;
 import com.test.instructions.stack.dup.Dup;
 import com.test.instructions.stack.dup.DupX1;
@@ -130,12 +134,12 @@ public class InstructionManager {
                 return new BiPush();
             case 0x11:
                 return new SiPush();
-//            case 0x12:
-//                return new Ldc();
-//            case 0x13:
-//                return new Ldcw();
-//            case 0x14:
-//                return new Ldc2w();
+            case 0x12:
+                return new LDC();
+            case 0x13:
+                return new LDCW();
+            case 0x14:
+                return new LDC2W();
             case 0x15:
                 return new ILoad();
             case 0x16:
@@ -450,26 +454,26 @@ public class InstructionManager {
 //                return new AReturn();
 //            case 0xb1:
 //                return new Return();
-//            case 0xb2:
-//                return new GetStatic();
-//            case 0xb3:
-//                return new PutStatic();
-//            case 0xb4:
-//                return new GetField();
-//            case 0xb5:
-//                return new PutField();
-//            case 0xb6:
-//                return new InvokeVirtual();
-//            case 0xb7:
-//                return new InvokeSpecial();
+            case 0xb2:
+                return new GetStatic();
+            case 0xb3:
+                return new PutStatic();
+            case 0xb4:
+                return new GetField();
+            case 0xb5:
+                return new PutField();
+            case 0xb6:
+                return new InvokeVirtual();
+            case 0xb7:
+                return new InvokeSpecial();
 //            case 0xb8:
 //                return new InvokeStatic();
 //            case 0xb9:
 //                return new InvokeInterface();
 //            // case 0xba:
 //            // 	return &INVOKE_DYNAMIC{}
-//            case 0xbb:
-//                return new New();
+            case 0xbb:
+                return new New();
 //            case 0xbc:
 //                return new NewArray();
 //            case 0xbd:
@@ -478,10 +482,10 @@ public class InstructionManager {
 //                return new ArrayLength();
 //            case 0xbf:
 //                return new Athrow();
-//            case 0xc0:
-//                return new CheckCast();
-//            case 0xc1:
-//                return new InstanceOf();
+            case 0xc0:
+                return new CheckCast();
+            case 0xc1:
+                return new InstanceOf();
 //            case 0xc2:
 //                return new MonitorEnter();
 //            case 0xc3:

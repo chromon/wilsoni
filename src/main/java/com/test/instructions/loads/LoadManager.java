@@ -1,6 +1,7 @@
 package com.test.instructions.loads;
 
 import com.test.dataarea.Frame;
+import com.test.dataarea.heap.XObject;
 
 // 加载指令工具类
 public class LoadManager {
@@ -31,7 +32,7 @@ public class LoadManager {
 
     // 从局部变量表获取引用变量，然后推入操作数栈顶
     public static void aload(Frame frame, int index) {
-        Object obj = frame.getLocalVars().getRef(index);
+        XObject obj = frame.getLocalVars().getRef(index);
         frame.getOperandStack().pushRef(obj);
     }
 }

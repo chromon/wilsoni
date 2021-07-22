@@ -1,5 +1,7 @@
 package com.test.dataarea;
 
+import com.test.dataarea.heap.XMethod;
+
 // 线程
 public class XThread {
     // pc 计数器
@@ -38,5 +40,9 @@ public class XThread {
 
     public void setPC(int pc) {
         this.pc = pc;
+    }
+
+    public Frame newFrame(XMethod method) {
+        return new Frame(this, method);
     }
 }

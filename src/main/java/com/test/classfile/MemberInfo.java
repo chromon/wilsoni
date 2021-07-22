@@ -22,6 +22,7 @@ method_info {
 import com.test.classfile.attribute.AttributeInfo;
 import com.test.classfile.attribute.AttributeInfoManager;
 import com.test.classfile.attribute.CodeAttribute;
+import com.test.classfile.attribute.ConstantValueAttribute;
 
 import java.util.List;
 
@@ -66,6 +67,15 @@ public class MemberInfo {
         for (AttributeInfo attribute: attributes) {
             if (attribute instanceof CodeAttribute) {
                 return (CodeAttribute) attribute;
+            }
+        }
+        return null;
+    }
+
+    public ConstantValueAttribute getConstantValueAttribute() {
+        for (AttributeInfo attrInfo: this.attributes) {
+            if (attrInfo instanceof ConstantValueAttribute) {
+                return (ConstantValueAttribute) attrInfo;
             }
         }
         return null;

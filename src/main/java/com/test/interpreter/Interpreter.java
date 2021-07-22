@@ -4,6 +4,7 @@ import com.test.classfile.MemberInfo;
 import com.test.classfile.attribute.CodeAttribute;
 import com.test.dataarea.Frame;
 import com.test.dataarea.XThread;
+import com.test.dataarea.heap.XMethod;
 import com.test.instructions.InstructionManager;
 import com.test.instructions.base.BytecodeReader;
 import com.test.instructions.base.Instruction;
@@ -11,18 +12,18 @@ import com.test.instructions.base.Instruction;
 // 解释器
 public class Interpreter {
 
-    public void interpret(MemberInfo memberInfo) {
+    public void interpret(XMethod method) {
         // Code属性，进一步获得执行方法所需的局部变量表和操作数栈空间，以及方法的字节码
-        CodeAttribute codeAttribute = memberInfo.getCodeAttribute();
-        int maxLocals = codeAttribute.getMaxLocals();
-        int maxStack = codeAttribute.getMaxStack();
-        byte[] byteCode = codeAttribute.getCode();
+//        CodeAttribute codeAttribute = memberInfo.getCodeAttribute();
+//        int maxLocals = codeAttribute.getMaxLocals();
+//        int maxStack = codeAttribute.getMaxStack();
+//        byte[] byteCode = codeAttribute.getCode();
 
         XThread xThread = new XThread();
-        Frame frame = new Frame(xThread, maxLocals, maxStack);
+        Frame frame = xThread.newFrame(method);
         xThread.pushFrame(frame);
 
-        loop(xThread, byteCode);
+        loop(xThread, method.getCode());
     }
 
     // 循环执行计算 PC、解码指令、执行指令三个步骤，直到遇到错误退出

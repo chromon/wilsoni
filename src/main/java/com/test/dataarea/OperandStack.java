@@ -1,5 +1,7 @@
 package com.test.dataarea;
 
+import com.test.dataarea.heap.XObject;
+
 // 操作数栈
 public class OperandStack {
     // 记录栈顶位置（操作数栈的大小是编译器已经确定的）
@@ -82,16 +84,16 @@ public class OperandStack {
     }
 
     // 向操作数栈栈顶存放引用型变量
-    public void pushRef(java.lang.Object object) {
+    public void pushRef(XObject object) {
         Slot slot = new Slot();
         slot.setRef(object);
         this.operandStack[this.size++] = slot;
     }
 
     // 从操作数栈中读取引用型变量
-    public Object popRef() {
+    public XObject popRef() {
         Slot slot = this.operandStack[--this.size];
-        Object ref = (Object) slot.getRef();
+        XObject ref = (XObject) slot.getRef();
         this.operandStack[this.size] = null;
         return ref;
     }

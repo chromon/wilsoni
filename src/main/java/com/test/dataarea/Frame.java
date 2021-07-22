@@ -1,5 +1,7 @@
 package com.test.dataarea;
 
+import com.test.dataarea.heap.XMethod;
+
 // 虚拟机栈栈帧（包括局部变量表、操作数栈、方法返回值和动态链接）
 public class Frame {
 
@@ -10,11 +12,14 @@ public class Frame {
     // 线程
     private XThread xThread;
     private int nextPC;
+    // 通过 frame 得到当前类的运行时常量池
+    private XMethod method;
 
-    public Frame(XThread xThread, int maxLocals, int maxStack) {
+    public Frame(XThread xThread, XMethod method) {
         this.xThread = xThread;
-        this.localVars = new LocalVars(maxLocals);
-        this.operandStack = new OperandStack(maxStack);
+        this.method = method;
+        this.localVars = new LocalVars(method.getMaxLocals());
+        this.operandStack = new OperandStack(method.getMaxStack());
     }
 
     public LocalVars getLocalVars() {
@@ -39,5 +44,9 @@ public class Frame {
 
     public void setNextPC(int nextPC) {
         this.nextPC = nextPC;
+    }
+
+    public XMethod getMethod() {
+        return method;
     }
 }

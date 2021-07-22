@@ -7,6 +7,9 @@ import com.test.classpath.Classpath;
 import com.test.dataarea.Frame;
 import com.test.dataarea.LocalVars;
 import com.test.dataarea.OperandStack;
+import com.test.dataarea.heap.XClass;
+import com.test.dataarea.heap.XClassLoader;
+import com.test.dataarea.heap.XMethod;
 import com.test.interpreter.Interpreter;
 import org.apache.commons.cli.ParseException;
 
@@ -33,8 +36,11 @@ public class Wilsoni {
                 + ", class: " + cmd.getClassName()
                 + ", " + cmd.argsToString());
         String className = cmd.getClassName().replace(".", "/");
-        ClassFile cf = load(className, cp);
-        MemberInfo mainMethod = getMainMethod(cf);
+
+        XClassLoader loader = new XClassLoader(cp);
+        XClass mainClass = loader.loadClass(className);
+
+        XMethod mainMethod = mainClass.getMainMethod();
         if (mainMethod != null) {
             new Interpreter().interpret(mainMethod);
         } else {
