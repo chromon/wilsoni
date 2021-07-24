@@ -28,6 +28,7 @@ import com.test.instructions.constants.push.SiPush;
 import com.test.instructions.control.GOTO;
 import com.test.instructions.control.LookUpSwitch;
 import com.test.instructions.control.TableSwitch;
+import com.test.instructions.control.xreturn.*;
 import com.test.instructions.conversions.d2x.D2F;
 import com.test.instructions.conversions.d2x.D2I;
 import com.test.instructions.conversions.d2x.D2L;
@@ -442,18 +443,18 @@ public class InstructionManager {
                 return new TableSwitch();
             case 0xab:
                 return new LookUpSwitch();
-//            case 0xac:
-//                return new IReturn();
-//            case 0xad:
-//                return new LReturn();
-//            case 0xae:
-//                return new FReturn();
-//            case 0xaf:
-//                return new DReturn();
-//            case 0xb0:
-//                return new AReturn();
-//            case 0xb1:
-//                return new Return();
+            case 0xac:
+                return new IReturn();
+            case 0xad:
+                return new LReturn();
+            case 0xae:
+                return new FReturn();
+            case 0xaf:
+                return new DReturn();
+            case 0xb0:
+                return new AReturn();
+            case 0xb1:
+                return new XReturn();
             case 0xb2:
                 return new GetStatic();
             case 0xb3:
@@ -466,10 +467,10 @@ public class InstructionManager {
                 return new InvokeVirtual();
             case 0xb7:
                 return new InvokeSpecial();
-//            case 0xb8:
-//                return new InvokeStatic();
-//            case 0xb9:
-//                return new InvokeInterface();
+            case 0xb8:
+                return new InvokeStatic();
+            case 0xb9:
+                return new InvokeInterface();
 //            // case 0xba:
 //            // 	return &INVOKE_DYNAMIC{}
             case 0xbb:

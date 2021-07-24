@@ -114,4 +114,7 @@ public class LocalVars {
         return false;
     }
 
+    public void setSlot(int index, Slot slot) {
+        this.localVars[index] = slot;
+    }
 }

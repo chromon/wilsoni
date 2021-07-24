@@ -2,6 +2,8 @@ package com.test.dataarea.heap;
 
 import com.test.classfile.ClassFile;
 import com.test.classfile.ConstantPool;
+import com.test.dataarea.Frame;
+import com.test.dataarea.XThread;
 
 import java.io.File;
 import java.util.List;
@@ -35,6 +37,8 @@ public class XClass {
     private int staticSlotCount;
     // 静态变量
     private Slots staticVars;
+    // 是否初始化
+    private boolean initStarted;
 
     public XClass(ClassFile cf) {
         this.accessFlags = cf.getAccessFlag();
@@ -90,6 +94,7 @@ public class XClass {
         return this.isPublic() || this.getPackageName().equals(other.getPackageName());
     }
 
+    // 判断是否是子类，判断 S 是否是 T 的子类，实际上也就是判断 T 是否是 S 的（直接或间接）超类
     public boolean isSubClassOf(XClass other) {
         for(XClass cls = this.getSuperClass(); cls != null; cls = cls.getSuperClass()) {
             if(cls != null && cls.equals(other)) {
@@ -98,6 +103,11 @@ public class XClass {
         }
 
         return false;
+    }
+
+    // 判断是否是否父类
+    public boolean isSuperClassOf(XClass other) {
+        return other.isSubClassOf(this);
     }
 
     public String getPackageName() {
@@ -271,5 +281,44 @@ public class XClass {
 
     public void setMethods(List<XMethod> methods) {
         this.methods = methods;
+    }
+
+    public boolean initStarted() {
+        return this.initStarted;
+    }
+
+    public void startInit() {
+        this.initStarted = true;
+    }
+
+    // 初始化类
+    public static void initClass(XThread thread, XClass clazz) {
+        clazz.startInit();
+        // 执行类的初始化方法
+        scheduleClinit(thread, clazz);
+        initSuperClass(thread, clazz);
+    }
+
+    // 执行类的初始化方法
+    private static void scheduleClinit(XThread thread, XClass clazz) {
+        XMethod clinit = clazz.getClinitMethod();
+        if (clinit != null) {
+            // 执行 <clinit>
+            Frame frame = thread.newFrame(clinit);
+            thread.pushFrame(frame);
+        }
+    }
+
+    private XMethod getClinitMethod() {
+        return this.getStaticMethod("<clinit>", "()V");
+    }
+
+    private static void initSuperClass(XThread thread, XClass clazz) {
+        if (!clazz.isInterface()) {
+            XClass superClass = clazz.getSuperClass();
+            if (superClass != null && !superClass.initStarted()) {
+                initClass(thread, superClass);
+            }
+        }
     }
 }

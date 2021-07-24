@@ -20,7 +20,12 @@ public class PutStatic extends Index16Instruction {
         XField field = fieldRef.resolvedField();
         XClass clazz = field.getClazz();
 
-        // TODO init class
+        // init class
+        if (!clazz.initStarted()) {
+            frame.revertNextPC();
+            XClass.initClass(frame.getXThread(), clazz);
+            return;
+        }
 
         // 解析后字段是实例字段而非静态字段，则抛出异常
         if (!field.isStatic()) {

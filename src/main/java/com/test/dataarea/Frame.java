@@ -49,4 +49,8 @@ public class Frame {
     public XMethod getMethod() {
         return method;
     }
+
+    public void revertNextPC() {
+        this.nextPC = this.xThread.getPC();
+    }
 }

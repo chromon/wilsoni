@@ -19,7 +19,12 @@ public class GetStatic extends Index16Instruction {
         XField field = fieldRef.resolvedField();
         XClass clazz = field.getClazz();
 
-        // TODO initclass
+        // init class
+        if (!clazz.initStarted()) {
+            frame.revertNextPC();
+            XClass.initClass(frame.getXThread(), clazz);
+            return;
+        }
 
         // 如果解析后的字段不是静态字段则抛出异常
         if (!field.isStatic()) {

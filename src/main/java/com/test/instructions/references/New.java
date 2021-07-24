@@ -19,7 +19,12 @@ public class New extends Index16Instruction {
         // 解析符号引用，得到类数据
         XClass clazz = classRef.resolvedClass();
 
-        // TODO initclass
+        // init class
+        if (!clazz.initStarted()) {
+            frame.revertNextPC();
+            XClass.initClass(frame.getXThread(), clazz);
+            return;
+        }
 
         // 接口和抽象类不能实例化，需要抛出异常
         if (clazz.isInterface() || clazz.isAbstract()) {

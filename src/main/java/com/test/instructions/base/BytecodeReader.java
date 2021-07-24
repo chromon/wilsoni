@@ -31,6 +31,13 @@ public class BytecodeReader {
         return b;
     }
 
+    // 16-bit signed int
+    public short readShort() {
+        short d = buf.getShort(offset);
+        offset += 2;
+        return d;
+    }
+
     // 读取 u1 类型数据: 8-bit unsigned int
     private int readUnsignedByte() {
         int d = (int)(buf.get(offset));

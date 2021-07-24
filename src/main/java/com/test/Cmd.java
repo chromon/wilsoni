@@ -16,6 +16,10 @@ public class Cmd {
     private String[] args;
     // 类权限定名
     private String className;
+    // 是否把类加载信息输出到控制台
+    private boolean verboseClass;
+    // 是否把指令执行信息输出到控制台
+    private boolean verboseInst;
 
     private Options options;
 
@@ -25,6 +29,8 @@ public class Cmd {
         options.addOption("v", "verbose", false, "Print out VERBOSE information" );
         options.addOption("cp", "classpath", true, "class path");
         options.addOption("Xjre", "Xjre", true, "path to jre");
+        options.addOption("verbose", "verboseClass", false, "enable verbose output");
+        options.addOption("verboseInst", "verboseInst", false, "enable verbose output");
 
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd;
@@ -51,6 +57,16 @@ public class Cmd {
             if (cmd.hasOption("Xjre")) {
                 this.xJre = cmd.getOptionValue("Xjre");
                 count += 2;
+            }
+
+            if (cmd.hasOption("verbose")) {
+                this.verboseClass = true;
+                count++;
+            }
+
+            if (cmd.hasOption("verboseInst")) {
+                this.verboseInst = true;
+                count++;
             }
 
             if (count > 0 && args.length > count) {
@@ -133,6 +149,22 @@ public class Cmd {
 
     public void setClassName(String className) {
         this.className = className;
+    }
+
+    public boolean isVerboseClass() {
+        return verboseClass;
+    }
+
+    public void setVerboseClass(boolean verboseClass) {
+        this.verboseClass = verboseClass;
+    }
+
+    public boolean isVerboseInst() {
+        return verboseInst;
+    }
+
+    public void setVerboseInst(boolean verboseInst) {
+        this.verboseInst = verboseInst;
     }
 
     public String argsToString() {

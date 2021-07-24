@@ -7,10 +7,7 @@ import com.test.classpath.Classpath;
 import com.test.dataarea.Slot;
 
 import java.time.temporal.ValueRange;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /*
 class names:
@@ -28,9 +25,11 @@ public class XClassLoader {
     // 记录已经加载的类数据，key 是类的完全限定名
     // 方法区是一个抽象的概念，classMap 可以看做是方法区的具体实现
     private Map<String, XClass> classMap;
+    private boolean verbose;
 
-    public XClassLoader(Classpath classpath) {
+    public XClassLoader(Classpath classpath, boolean verbose) {
         this.classpath = classpath;
+        this.verbose = verbose;
         this.classMap = new HashMap<>();
     }
 
@@ -52,7 +51,9 @@ public class XClassLoader {
         byte[] data = this.readClass(name);
         XClass clazz = this.defineClass(data);
         this.link(clazz);
-        System.out.println("class " + name + " loaded");
+        if (this.verbose) {
+            System.out.println("class " + name + " loaded");
+        }
         return clazz;
     }
 
@@ -97,13 +98,14 @@ public class XClassLoader {
     // 解析直接接口表符号引用
     public void resolveInterfaces(XClass clazz) {
         int interfaceCount = clazz.getInterfaceNames().size();
+        List<XClass> interfaces = new ArrayList<>();
         if (interfaceCount > 0) {
             for (int i = 0; i < interfaceCount; i++) {
-                clazz.getInterfaces().add(
-                        clazz.getClassLoader().loadClass(
+                interfaces.add(clazz.getClassLoader().loadClass(
                                 clazz.getInterfaceNames().get(i)));
             }
         }
+        clazz.setInterfaces(interfaces);
     }
 
     // 链接：分为验证和准备两个阶段

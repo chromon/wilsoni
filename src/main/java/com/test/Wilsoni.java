@@ -32,17 +32,17 @@ public class Wilsoni {
     public static void startJVM(Cmd cmd) {
         Classpath cp = new Classpath();
         cp.parse(cmd.getxJre(), cmd.getClasspath());
-        System.out.println("classpath: " + cp
-                + ", class: " + cmd.getClassName()
-                + ", " + cmd.argsToString());
+//        System.out.println("classpath: " + cp
+//                + ", class: " + cmd.getClassName()
+//                + ", " + cmd.argsToString());
         String className = cmd.getClassName().replace(".", "/");
 
-        XClassLoader loader = new XClassLoader(cp);
+        XClassLoader loader = new XClassLoader(cp, cmd.isVerboseClass());
         XClass mainClass = loader.loadClass(className);
 
         XMethod mainMethod = mainClass.getMainMethod();
         if (mainMethod != null) {
-            new Interpreter().interpret(mainMethod);
+            new Interpreter().interpret(mainMethod, cmd.isVerboseInst());
         } else {
             throw new RuntimeException("main method not found in class: "
                     + cmd.getClassName());
