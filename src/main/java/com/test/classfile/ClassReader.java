@@ -31,6 +31,13 @@ public class ClassReader {
                 .order(order);
     }
 
+    // 8-bit signed int
+    public byte readByte() {
+        byte b = buf.get(offset);
+        offset++;
+        return b;
+    }
+
     // 读取 u1 类型数据: 8-bit unsigned int
     private int readUnsignedByte() {
         int d = (int)(buf.get(offset));

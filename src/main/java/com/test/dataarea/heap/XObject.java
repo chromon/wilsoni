@@ -46,4 +46,16 @@ public class XObject {
     public XObject[] getRefs() {
         return (XObject[]) this.data;
     }
+
+    public XObject getRefVar(String name, String descriptor) {
+        XField field = clazz.getField(name, descriptor, false);
+        Slots slots = (Slots) data;
+        return slots.getRef(field.getSlotId());
+    }
+
+    public void setRefVar(String name, String descriptor, XObject ref) {
+        XField field = clazz.getField(name, descriptor, false);
+        Slots slots = (Slots) getData();
+        slots.setRef(field.getSlotId(), ref);
+    }
 }

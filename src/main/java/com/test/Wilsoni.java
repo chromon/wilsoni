@@ -42,7 +42,7 @@ public class Wilsoni {
 
         XMethod mainMethod = mainClass.getMainMethod();
         if (mainMethod != null) {
-            new Interpreter().interpret(mainMethod, cmd.isVerboseInst());
+            new Interpreter().interpret(mainMethod, cmd.isVerboseInst(), cmd.getArgs());
         } else {
             throw new RuntimeException("main method not found in class: "
                     + cmd.getClassName());

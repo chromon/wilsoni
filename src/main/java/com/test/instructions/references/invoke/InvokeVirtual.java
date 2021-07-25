@@ -78,11 +78,11 @@ public class InvokeVirtual extends Index16Instruction {
         } else if("()V".equals(descriptor)) {
             System.out.print("void");
         } else if("(Ljava/lang/String;)V".equals(descriptor)) {
-//            XObject obj = stack.popRef();
-//            XObject strObj = obj.getRefVar("value", "[C");
-//            char[] chars = (char[]) strObj.getData();
-//            String str = new String(chars);
-//            System.out.print(str);
+            XObject obj = stack.popRef();
+            XObject strObj = obj.getRefVar("value", "[C");
+            char[] chars = (char[]) strObj.getData();
+            String str = new String(chars);
+            System.out.print(str);
         }
         stack.popRef();
     }

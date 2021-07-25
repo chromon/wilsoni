@@ -4,7 +4,7 @@ import com.test.classfile.MemberInfo;
 import com.test.classfile.attribute.CodeAttribute;
 import com.test.dataarea.Frame;
 import com.test.dataarea.XThread;
-import com.test.dataarea.heap.XMethod;
+import com.test.dataarea.heap.*;
 import com.test.instructions.InstructionManager;
 import com.test.instructions.base.BytecodeReader;
 import com.test.instructions.base.Instruction;
@@ -13,12 +13,26 @@ import com.test.instructions.base.Instruction;
 public class Interpreter {
 
     // logInst 参数控制是否把指令执行信息打印到控制台
-    public void interpret(XMethod method, boolean logInst) {
+    public void interpret(XMethod method, boolean logInst, String[] args) {
         XThread xThread = new XThread();
         Frame frame = xThread.newFrame(method);
         xThread.pushFrame(frame);
 
+        XObject jArgs = createArgsArray(method.getClazz().getClassLoader(), args);
+        frame.getLocalVars().setRef(0, jArgs);
+
         loop(xThread, logInst);
+    }
+
+    private static XObject createArgsArray(XClassLoader classLoader, String[] args) {
+        XClass stringClass = classLoader.loadClass("java/lang/String");
+        XObject argsObj = stringClass.newArray(args.length);
+        XObject[] refs = (XObject[]) argsObj.getData();
+        for(int i = 0;i < args.length;i++) {
+            refs[i] = StringPool.getStringObject(classLoader, args[i]);
+        }
+
+        return argsObj;
     }
 
     // 循环执行计算 PC、解码指令、执行指令三个步骤，直到遇到错误退出

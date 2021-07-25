@@ -229,8 +229,9 @@ public class XClassLoader {
                 double val = (double) rcp.getConstantInfo(cpIndex).getValue();
                 slots.setDouble(slotId, val);
             } else if ("Ljava/lang/String;".equals(descriptor)) {
-//                String str = (String) rcp.getConstantInfo(cpIndex).getValue();
-//                XObject obj =
+                String str = (String) rcp.getConstantInfo(cpIndex).getValue();
+                XObject obj = StringPool.getStringObject(clazz.getClassLoader(), str);
+                slots.setRef(slotId, obj);
             }
         }
     }

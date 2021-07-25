@@ -5,6 +5,7 @@ import com.test.dataarea.Frame;
 import com.test.dataarea.XThread;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 // 方法区内的类信息
@@ -416,5 +417,32 @@ public class XClass {
         String componentClassName = ClassNameManager.getComponentClassName(this.getName());
         // 用类加载器加载元素类
         return this.getClassLoader().loadClass(componentClassName);
+    }
+
+    public List<XField> getField(boolean publicOnly) {
+        List<XField> fields = new ArrayList<>();
+        if(publicOnly) {
+            for(XClass cls = this; cls != null; cls = cls.getSuperClass()) {
+                for(XField field : cls.getFields()) {
+                    if(field.isPublic()) {
+                        fields.add(field);
+                    }
+                }
+            }
+            return fields;
+        } else {
+            return getFields();
+        }
+    }
+
+    public XField getField(String name, String descriptor, boolean isStatic) {
+        for(XClass cls = this; cls != null; cls = cls.getSuperClass()) {
+            for(XField field : cls.getFields()) {
+                if(field.isStatic() == isStatic && name.equals(field.getName()) && descriptor.equals(field.getDescriptor())) {
+                    return field;
+                }
+            }
+        }
+        return null;
     }
 }
