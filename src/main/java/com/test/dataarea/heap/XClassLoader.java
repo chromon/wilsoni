@@ -40,6 +40,12 @@ public class XClassLoader {
             // 类已经加载
             return clazz;
         }
+
+        if (name.charAt(0) == '[') {
+            // 加载数组类
+            return this.loadArrayClass(name);
+        }
+
         // 类还没有被加载，调用加载
         return this.loadNonArrayClass(name);
     }
@@ -54,6 +60,28 @@ public class XClassLoader {
         if (this.verbose) {
             System.out.println("class " + name + " loaded");
         }
+        return clazz;
+    }
+
+    // 加载数组类
+    private XClass loadArrayClass(String name) {
+        XClass clazz = new XClass();
+        clazz.setAccessFlags(AccessFlag.ACC_PUBLIC);
+        clazz.setName(name);
+        clazz.setClassLoader(this);
+        // 数组类不需要初始化
+        clazz.startInit();
+        clazz.setSuperClass(loadClass("java/lang/Object"));
+        clazz.setSuperClassName("java/lang/Object");
+        clazz.setMethods(Collections.<XMethod>emptyList());
+
+        List<XClass> interfaces = new ArrayList<>();
+        interfaces.add(loadClass("java/lang/Cloneable"));
+        interfaces.add(loadClass("java/io/Serializable"));
+        clazz.setInterfaces(interfaces);
+        clazz.setInterfaceNames(Arrays.asList("java/lang/Cloneable", "java/io/Serializable"));
+        classMap.put(name, clazz);
+
         return clazz;
     }
 

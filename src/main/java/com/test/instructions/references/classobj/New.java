@@ -1,10 +1,8 @@
-package com.test.instructions.references;
+package com.test.instructions.references.classobj;
 
 import com.test.dataarea.Frame;
 import com.test.dataarea.heap.*;
 import com.test.instructions.base.Index16Instruction;
-
-import java.sql.Ref;
 
 // new 指令，专门用于创建类实例
 public class New extends Index16Instruction {

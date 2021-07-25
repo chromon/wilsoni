@@ -1,7 +1,6 @@
 package com.test.dataarea.heap;
 
 import com.test.classfile.ClassFile;
-import com.test.classfile.ConstantPool;
 import com.test.dataarea.Frame;
 import com.test.dataarea.XThread;
 
@@ -39,6 +38,8 @@ public class XClass {
     private Slots staticVars;
     // 是否初始化
     private boolean initStarted;
+
+    public XClass() {}
 
     public XClass(ClassFile cf) {
         this.accessFlags = cf.getAccessFlag();
@@ -145,23 +146,67 @@ public class XClass {
         return false;
     }
 
+    public boolean isJlObject() {
+        return name.equals("java/lang/Object");
+    }
+
+    public boolean isSuperInterfaceOf(XClass iface) {
+        return iface.isSubInterfaceOf(this);
+    }
+
+    public boolean isJlCloneable() {
+        return name.equals("java/lang/Cloneable");
+    }
+
+    public boolean isJioSerializable() {
+        return name.equals("java/io/Serializable");
+    }
+
     public boolean isAssignableFrom(XClass other) {
         XClass s = other;
         XClass t = this;
 
-        if (s.equals(t)) {
+        if(s.equals(t)){
             return true;
         }
 
-        // s is class
-        if(!t.isInterface()) {
-            // t is not interface
-            return s.isSubClassOf(t);
+        if(!s.isArray()){
+            if(!s.isInterface()) {
+                // s is class
+                if(!t.isInterface()) {
+                    // t is not interface
+                    return s.isSubClassOf(t);
+                } else {
+                    // t is interface
+                    return s.isImplements(t);
+                }
+            } else {
+                // s is interface
+                if(!t.isInterface()) {
+                    // t is not interface
+                    return t.isJlObject();
+                } else {
+                    // t is interface
+                    return t.isSuperInterfaceOf(s);
+                }
+            }
         } else {
-            // t is interface
-            return s.isImplements(t);
+            // s is array
+            if(!t.isArray()) {
+                if(!t.isInterface()) {
+                    // t is class
+                    return t.isJlObject();
+                } else {
+                    // t is interface
+                    return t.isJlCloneable() || t.isJioSerializable();
+                }
+            } else {
+                // t is array
+                XClass sc = s.getComponentClass();
+                XClass tc = t.getComponentClass();
+                return sc == tc || tc.isAssignableFrom(sc);
+            }
         }
-
     }
 
     // 获取主类 main 方法
@@ -320,5 +365,56 @@ public class XClass {
                 initClass(thread, superClass);
             }
         }
+    }
+
+    public boolean isArray() {
+        return this.name.charAt(0) == '[';
+    }
+
+    // 创建数组对象
+    public XObject newArray(int count) {
+        if (!this.isArray()) {
+            throw new RuntimeException("not array class: " + this.getName());
+        }
+
+        XObject obj = new XObject(this);
+
+        if("[Z".equals(name)) {
+            obj.setData(new int[count]);
+        } else if("[B".equals(name)) {
+            obj.setData(new byte[count]);
+        } else if("[C".equals(name)) {
+            obj.setData(new char[count]);
+        } else if("[S".equals(name)) {
+            obj.setData(new short[count]);
+        } else if("[I".equals(name)) {
+            obj.setData(new int[count]);
+        } else if("[J".equals(name)) {
+            obj.setData(new long[count]);
+        } else if("[F".equals(name)) {
+            obj.setData(new float[count]);
+        } else if("[D".equals(name)) {
+            obj.setData(new double[count]);
+        } else {
+            obj.setData(new XObject[count]);
+        }
+
+        return obj;
+    }
+
+    // 返回与类对应的数组类
+    public XClass getArrayClass() {
+        // 根据类名得到数组类名
+        String arrayClassName = ClassNameManager.getArrayClassName(this.getName());
+        // 调用类加载器加载数组类
+        return this.getClassLoader().loadClass(arrayClassName);
+    }
+
+    // 返回数组类的元素类型
+    public XClass getComponentClass() {
+        // 根据数组类名推测出数组元素类名
+        String componentClassName = ClassNameManager.getComponentClassName(this.getName());
+        // 用类加载器加载元素类
+        return this.getClassLoader().loadClass(componentClassName);
     }
 }

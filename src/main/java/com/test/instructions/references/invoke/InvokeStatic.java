@@ -1,4 +1,4 @@
-package com.test.instructions.references;
+package com.test.instructions.references.invoke;
 
 import com.test.dataarea.Frame;
 import com.test.dataarea.heap.MethodRef;

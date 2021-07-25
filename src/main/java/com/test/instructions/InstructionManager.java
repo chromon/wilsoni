@@ -48,6 +48,8 @@ import com.test.instructions.loads.dloadx.*;
 import com.test.instructions.loads.floadx.*;
 import com.test.instructions.loads.iloadx.*;
 import com.test.instructions.loads.lloadx.*;
+import com.test.instructions.loads.xaload.*;
+import com.test.instructions.loads.xastore.*;
 import com.test.instructions.math.add.DAdd;
 import com.test.instructions.math.add.FAdd;
 import com.test.instructions.math.add.IAdd;
@@ -80,7 +82,15 @@ import com.test.instructions.math.sub.DSub;
 import com.test.instructions.math.sub.FSub;
 import com.test.instructions.math.sub.ISub;
 import com.test.instructions.math.sub.LSub;
-import com.test.instructions.references.*;
+import com.test.instructions.references.array.ANewArray;
+import com.test.instructions.references.array.ArrayLength;
+import com.test.instructions.references.array.MultiANewArray;
+import com.test.instructions.references.array.NewArray;
+import com.test.instructions.references.classobj.*;
+import com.test.instructions.references.invoke.InvokeInterface;
+import com.test.instructions.references.invoke.InvokeSpecial;
+import com.test.instructions.references.invoke.InvokeStatic;
+import com.test.instructions.references.invoke.InvokeVirtual;
 import com.test.instructions.stack.Swap;
 import com.test.instructions.stack.dup.Dup;
 import com.test.instructions.stack.dup.DupX1;
@@ -191,22 +201,22 @@ public class InstructionManager {
                 return new ALoad2();
             case 0x2d:
                 return new ALoad3();
-//            case 0x2e:
-//                return new IALoad();
-//            case 0x2f:
-//                return new LALoad();
-//            case 0x30:
-//                return new FALoad();
-//            case 0x31:
-//                return new DALoad();
-//            case 0x32:
-//                return new AALoad();
-//            case 0x33:
-//                return new BALoad();
-//            case 0x34:
-//                return new CALoad();
-//            case 0x35:
-//                return new SALoad();
+            case 0x2e:
+                return new IALoad();
+            case 0x2f:
+                return new LALoad();
+            case 0x30:
+                return new FALoad();
+            case 0x31:
+                return new DALoad();
+            case 0x32:
+                return new AALoad();
+            case 0x33:
+                return new BALoad();
+            case 0x34:
+                return new CALoad();
+            case 0x35:
+                return new SALoad();
             case 0x36:
                 return new IStore();
             case 0x37:
@@ -257,22 +267,22 @@ public class InstructionManager {
                 return new AStore2();
             case 0x4e:
                 return new AStore3();
-//            case 0x4f:
-//                return new IAStore();
-//            case 0x50:
-//                return new LAStore();
-//            case 0x51:
-//                return new FAStore();
-//            case 0x52:
-//                return new DAStore();
-//            case 0x53:
-//                return new AAStore();
-//            case 0x54:
-//                return new BAStore();
-//            case 0x55:
-//                return new CAStore();
-//            case 0x56:
-//                return new SAStore();
+            case 0x4f:
+                return new IAStore();
+            case 0x50:
+                return new LAStore();
+            case 0x51:
+                return new FAStore();
+            case 0x52:
+                return new DAStore();
+            case 0x53:
+                return new AAStore();
+            case 0x54:
+                return new BAStore();
+            case 0x55:
+                return new CAStore();
+            case 0x56:
+                return new SAStore();
             case 0x57:
                 return new Pop();
             case 0x58:
@@ -475,12 +485,12 @@ public class InstructionManager {
 //            // 	return &INVOKE_DYNAMIC{}
             case 0xbb:
                 return new New();
-//            case 0xbc:
-//                return new NewArray();
-//            case 0xbd:
-//                return new ANewArray();
-//            case 0xbe:
-//                return new ArrayLength();
+            case 0xbc:
+                return new NewArray();
+            case 0xbd:
+                return new ANewArray();
+            case 0xbe:
+                return new ArrayLength();
 //            case 0xbf:
 //                return new Athrow();
             case 0xc0:
@@ -493,8 +503,8 @@ public class InstructionManager {
 //                return new MonitorExit();
             case 0xc4:
                 return new Wide();
-//            case 0xc5:
-//                return new MultiANewArray();
+            case 0xc5:
+                return new MultiANewArray();
             case 0xc6:
                 return new IFNull();
             case 0xc7:

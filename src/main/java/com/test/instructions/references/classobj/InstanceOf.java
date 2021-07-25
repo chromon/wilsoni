@@ -1,4 +1,4 @@
-package com.test.instructions.references;
+package com.test.instructions.references.classobj;
 
 import com.test.dataarea.Frame;
 import com.test.dataarea.OperandStack;

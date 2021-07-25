@@ -1,38 +1,41 @@
-package com.test.instructions.references;
+package com.test.instructions.references.classobj;
+
+// pushstatic 和 getstatic 指令用于存取静态变量
 
 import com.test.dataarea.Frame;
 import com.test.dataarea.OperandStack;
 import com.test.dataarea.heap.*;
 import com.test.instructions.base.Index16Instruction;
 
-// getfield 指令获取对象的实例变量值，然后推入操作数栈
-public class GetField extends Index16Instruction {
+// getstatic 指令和 putstatic 正好相反，
+// getstatic 取出类的某个静态变量值，然后推入栈顶
+public class GetStatic extends Index16Instruction {
     @Override
     public void Execute(Frame frame) {
-        XMethod method = frame.getMethod();
-        XClass currentClazz = method.getClazz();
-        RuntimeConstantPool rcp = currentClazz.getRcp();
+        RuntimeConstantPool rcp = frame.getMethod().getClazz().getRcp();
         // 通过索引从当前类的运行时常量池中查找字段符号引用
         FieldRef fieldRef = (FieldRef) rcp.getConstantInfo(super.getIndex()).getValue();
-        // 解析
+        // 解析符号引用，得到类的静态变量
         XField field = fieldRef.resolvedField();
         XClass clazz = field.getClazz();
 
-        if (field.isStatic()) {
+        // init class
+        if (!clazz.initStarted()) {
+            frame.revertNextPC();
+            XClass.initClass(frame.getXThread(), clazz);
+            return;
+        }
+
+        // 如果解析后的字段不是静态字段则抛出异常
+        if (!field.isStatic()) {
             throw new RuntimeException("java.lang.IncompatibleClassChangeError");
         }
 
-        OperandStack stack = frame.getOperandStack();
-        XObject ref = stack.popRef();
-        // 弹出对象引用，如果是 null，则抛出 NullPointerException
-        if (ref == null) {
-            throw new RuntimeException("java.lang.NullPointerException");
-        }
-
-        // 根据字段类型，获取相应的实例变量值，然后推入操作数栈
+        // 根据字段类型，从静态变量中取出相应的值，然后推入操作数栈顶
         String descriptor = field.getDescriptor();
         int slotId = field.getSlotId();
-        Slots slots = (Slots) ref.getFields();
+        OperandStack stack = frame.getOperandStack();
+        Slots slots = clazz.getStaticVars();
 
         switch (descriptor.charAt(0)) {
             case 'Z':
